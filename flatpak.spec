@@ -6,7 +6,7 @@ Summary:	Application deployment framework for desktop apps
 Summary(pl.UTF-8):	Szkielet do wdrażania aplikacji desktopowych
 Name:		flatpak
 Version:	0.6.0
-Release:	1
+Release:	2
 License:	LGPL v2+
 Group:		Applications
 Source0:	https://www.freedesktop.org/software/xdg-app/releases/%{name}-%{version}.tar.xz
@@ -155,9 +155,6 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/flatpak/bwrap
 %attr(755,root,root) /etc/profile.d/flatpak.sh
 /etc/dbus-1/system.d/org.freedesktop.Flatpak.SystemHelper.conf
-%{_datadir}/dbus-1/interfaces/org.freedesktop.Flatpak.xml
-%{_datadir}/dbus-1/interfaces/org.freedesktop.impl.portal.PermissionStore.xml
-%{_datadir}/dbus-1/interfaces/org.freedesktop.portal.Documents.xml
 %{_datadir}/dbus-1/services/org.freedesktop.Flatpak.service
 %{_datadir}/dbus-1/services/org.freedesktop.impl.portal.PermissionStore.service
 %{_datadir}/dbus-1/services/org.freedesktop.portal.Documents.service
@@ -180,6 +177,9 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/libflatpak.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libflatpak.so.0
 %{_libdir}/girepository-1.0/Flatpak-1.0.typelib
+%{_datadir}/dbus-1/interfaces/org.freedesktop.Flatpak.xml
+%{_datadir}/dbus-1/interfaces/org.freedesktop.impl.portal.PermissionStore.xml
+%{_datadir}/dbus-1/interfaces/org.freedesktop.portal.Documents.xml
 
 %files devel
 %defattr(644,root,root,755)
