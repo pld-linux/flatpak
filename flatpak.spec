@@ -1,6 +1,7 @@
 #
 # Conditional build:
 %bcond_without	static_libs	# static library
+%bcond_without	system_bwrap	# system bubblewrap
 
 Summary:	Application deployment framework for desktop apps
 Summary(pl.UTF-8):	Szkielet do wdrażania aplikacji desktopowych
@@ -13,11 +14,12 @@ Source0:        https://github.com/flatpak/flatpak/releases/download/%{version}/
 # Source0-md5:	bf209efdeebe86976dca45d1b7226876
 Patch0:         flatpak-0.6.14-fix-gnome-software-crash.patch
 URL:            http://flatpak.org/
+%{?with_system_bwrap:BuildRequires:	bubblewrap >= 0.1.2}
 BuildRequires:	docbook-dtd412-xml
 BuildRequires:	docbook-style-xsl
 # or libelf >= 0.8.12
 BuildRequires:	elfutils-devel
-BuildRequires:	gettext-tools
+BuildRequires:	gettext-tools >= 0.18.2
 BuildRequires:	glib2-devel >= 1:2.45.8
 BuildRequires:	gobject-introspection-devel >= 1.40.0
 BuildRequires:	gtk-doc >= 1.20
@@ -25,7 +27,6 @@ BuildRequires:	intltool >= 0.35.0
 BuildRequires:	json-glib-devel >= 1.0
 BuildRequires:	libarchive-devel >= 2.8.0
 BuildRequires:	libfuse-devel
-BuildRequires:	libgsystem-devel >= 2015.1
 BuildRequires:	libseccomp-devel
 BuildRequires:	libsoup-devel >= 2.4
 BuildRequires:	libxslt-progs
@@ -36,7 +37,7 @@ BuildRequires:	rpmbuild(macros) >= 1.682
 BuildRequires:	tar >= 1:1.22
 BuildRequires:	xorg-lib-libXau-devel
 BuildRequires:	xz
-Requires:	libgsystem >= 2015.1
+%{?with_system_bwrap:Requires:	bubblewrap >= 0.1.2}
 Requires:	ostree >= 2016.14
 Obsoletes:	xdg-app < 0.6.0
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -52,7 +53,6 @@ Summary:	Shared flatpak library
 Summary(pl.UTF-8):	Biblioteka współdzielona flatpak
 Group:		Libraries
 Requires:	glib2 >= 1:2.45.8
-Requires:	libgsystem >= 2015.1
 Requires:	ostree >= 2016.5
 
 %description libs
@@ -67,7 +67,6 @@ Summary(pl.UTF-8):	Pliki nagłówkowe biblioteki flatpak
 Group:		Development/Libraries
 Requires:	%{name}-libs = %{version}-%{release}
 Requires:	glib2-devel >= 1:2.45.8
-Requires:	libgsystem-devel >= 2015.1
 Requires:	ostree-devel >= 2016.5
 
 %description devel
@@ -124,6 +123,7 @@ Bashowe uzupełnianie parametrów polecenia flatpak.
 	--disable-silent-rules \
 	%{?with_static_libs:--enable-static} \
 	--with-html-dir=%{_gtkdocdir} \
+	%{?with_system_bwrap:--with-system-bubblewrap} \
 	--with-systemdsystemunitdir=%{systemdunitdir}
 %{__make}
 
@@ -147,7 +147,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc NEWS
 %attr(755,root,root) %{_bindir}/flatpak
 %attr(755,root,root) %{_bindir}/flatpak-builder
+%if %{without system_bwrap}
 %attr(755,root,root) %{_libdir}/flatpak-bwrap
+%endif
 %attr(755,root,root) %{_libdir}/flatpak-dbus-proxy
 %attr(755,root,root) %{_libdir}/flatpak-session-helper
 %attr(755,root,root) %{_libdir}/flatpak-system-helper
