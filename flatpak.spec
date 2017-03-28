@@ -6,12 +6,12 @@
 Summary:	Application deployment framework for desktop apps
 Summary(pl.UTF-8):	Szkielet do wdrażania aplikacji desktopowych
 Name:		flatpak
-Version:	0.6.14
+Version:	0.9.1
 Release:	1
 License:	LGPL v2+
 Group:		Applications
 Source0:        https://github.com/flatpak/flatpak/releases/download/%{version}/%{name}-%{version}.tar.xz
-# Source0-md5:	bf209efdeebe86976dca45d1b7226876
+# Source0-md5:	d661acb9dd3a237df25b271b55f5b456
 Patch0:         flatpak-0.6.14-fix-gnome-software-crash.patch
 URL:            http://flatpak.org/
 %{?with_system_bwrap:BuildRequires:	bubblewrap >= 0.1.2}
@@ -146,6 +146,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc NEWS
 %attr(755,root,root) %{_bindir}/flatpak
+%attr(755,root,root) %{_bindir}/flatpak-bisect
 %attr(755,root,root) %{_bindir}/flatpak-builder
 %if %{without system_bwrap}
 %attr(755,root,root) %{_libdir}/flatpak-bwrap
@@ -168,6 +169,7 @@ rm -rf $RPM_BUILD_ROOT
 %{systemduserunitdir}/flatpak-session-helper.service
 %{systemduserunitdir}/xdg-document-portal.service
 %{systemduserunitdir}/xdg-permission-store.service
+/usr/lib/systemd/user/dbus.service.d/flatpak.conf
 # not supported by PLD gdm (yet?)
 #%{_datadir}/gdm/env.d/flatpak.env
 %dir %{_datadir}/flatpak
