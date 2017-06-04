@@ -6,15 +6,16 @@
 Summary:	Application deployment framework for desktop apps
 Summary(pl.UTF-8):	Szkielet do wdrażania aplikacji desktopowych
 Name:		flatpak
-Version:	0.9.1
-Release:	2
+Version:	0.9.4
+Release:	1
 License:	LGPL v2+
 Group:		Applications
+#Source0Download: https://github.com/flatpak/flatpak/releases/
 Source0:        https://github.com/flatpak/flatpak/releases/download/%{version}/%{name}-%{version}.tar.xz
-# Source0-md5:	d661acb9dd3a237df25b271b55f5b456
+# Source0-md5:	7c70a8dbf4b40abfea61574d326ab869
 Patch0:         flatpak-0.6.14-fix-gnome-software-crash.patch
 URL:            http://flatpak.org/
-%{?with_system_bwrap:BuildRequires:	bubblewrap >= 0.1.2}
+%{?with_system_bwrap:BuildRequires:	bubblewrap >= 0.1.8}
 BuildRequires:	docbook-dtd412-xml
 BuildRequires:	docbook-style-xsl
 # or libelf >= 0.8.12
@@ -30,15 +31,15 @@ BuildRequires:	libfuse-devel
 BuildRequires:	libseccomp-devel
 BuildRequires:	libsoup-devel >= 2.4
 BuildRequires:	libxslt-progs
-BuildRequires:	ostree-devel >= 2016.14
+BuildRequires:	ostree-devel >= 2017.6
 BuildRequires:	pkgconfig >= 1:0.24
 BuildRequires:	polkit-devel >= 0.98
 BuildRequires:	rpmbuild(macros) >= 1.682
 BuildRequires:	tar >= 1:1.22
 BuildRequires:	xorg-lib-libXau-devel
 BuildRequires:	xz
-%{?with_system_bwrap:Requires:	bubblewrap >= 0.1.2}
-Requires:	ostree >= 2016.14
+%{?with_system_bwrap:Requires:	bubblewrap >= 0.1.8}
+Requires:	ostree >= 2017.6
 Obsoletes:	xdg-app < 0.6.0
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -53,7 +54,7 @@ Summary:	Shared flatpak library
 Summary(pl.UTF-8):	Biblioteka współdzielona flatpak
 Group:		Libraries
 Requires:	glib2 >= 1:2.45.8
-Requires:	ostree >= 2016.5
+Requires:	ostree >= 2017.6
 
 %description libs
 Shared flatpak library.
@@ -67,7 +68,7 @@ Summary(pl.UTF-8):	Pliki nagłówkowe biblioteki flatpak
 Group:		Development/Libraries
 Requires:	%{name}-libs = %{version}-%{release}
 Requires:	glib2-devel >= 1:2.45.8
-Requires:	ostree-devel >= 2016.5
+Requires:	ostree-devel >= 2017.6
 
 %description devel
 Header files for flatpak library.
@@ -136,15 +137,18 @@ rm -rf $RPM_BUILD_ROOT
 # obsoleted by pkg-config
 %{__rm} $RPM_BUILD_ROOT%{_libdir}/libflatpak.la
 
+%find_lang %{name}
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %post	libs -p /sbin/ldconfig
 %postun	libs -p /sbin/ldconfig
 
-%files
+%files -f %{name}.lang
 %defattr(644,root,root,755)
 %doc NEWS
+%doc %{_docdir}/flatpak
 %attr(755,root,root) %{_bindir}/flatpak
 %attr(755,root,root) %{_bindir}/flatpak-bisect
 %attr(755,root,root) %{_bindir}/flatpak-builder
@@ -165,6 +169,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/polkit-1/actions/org.freedesktop.Flatpak.policy
 %{_datadir}/polkit-1/rules.d/org.freedesktop.Flatpak.rules
 %{systemdunitdir}/flatpak-system-helper.service
+# dir not available in PLD (yet?)
 #%{systemduserunitdir}/dbus.service.d/flatpak.conf
 %{systemduserunitdir}/flatpak-session-helper.service
 %{systemduserunitdir}/xdg-document-portal.service
@@ -177,7 +182,10 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/flatpak*.1*
 %{_mandir}/man5/flatpak-flatpakref.5*
 %{_mandir}/man5/flatpak-flatpakrepo.5*
+%{_mandir}/man5/flatpak-installation.5*
+%{_mandir}/man5/flatpak-manifest.5*
 %{_mandir}/man5/flatpak-metadata.5*
+%{_mandir}/man5/flatpak-remote.5*
 
 %files libs
 %defattr(644,root,root,755)
