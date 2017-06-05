@@ -11,11 +11,10 @@ Release:	1
 License:	LGPL v2+
 Group:		Applications
 #Source0Download: https://github.com/flatpak/flatpak/releases/
-Source0:        https://github.com/flatpak/flatpak/releases/download/%{version}/%{name}-%{version}.tar.xz
+Source0:	https://github.com/flatpak/flatpak/releases/download/%{version}/%{name}-%{version}.tar.xz
 # Source0-md5:	7c70a8dbf4b40abfea61574d326ab869
-Patch0:         flatpak-0.6.14-fix-gnome-software-crash.patch
-Patch1:		x32.patch
-URL:            http://flatpak.org/
+Patch0:		x32.patch
+URL:		http://flatpak.org/
 %{?with_system_bwrap:BuildRequires:	bubblewrap >= 0.1.8}
 BuildRequires:	docbook-dtd412-xml
 BuildRequires:	docbook-style-xsl
@@ -119,6 +118,7 @@ Bashowe uzupełnianie parametrów polecenia flatpak.
 
 %prep
 %setup -q
+%patch0 -p1
 
 %build
 %configure \
