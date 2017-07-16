@@ -6,13 +6,13 @@
 Summary:	Application deployment framework for desktop apps
 Summary(pl.UTF-8):	Szkielet do wdrażania aplikacji desktopowych
 Name:		flatpak
-Version:	0.9.4
+Version:	0.9.7
 Release:	1
 License:	LGPL v2+
 Group:		Applications
 #Source0Download: https://github.com/flatpak/flatpak/releases/
 Source0:	https://github.com/flatpak/flatpak/releases/download/%{version}/%{name}-%{version}.tar.xz
-# Source0-md5:	7c70a8dbf4b40abfea61574d326ab869
+# Source0-md5:	f0aafe2c72575ae2619f0867724c9659
 Patch0:		x32.patch
 URL:		http://flatpak.org/
 %{?with_system_bwrap:BuildRequires:	bubblewrap >= 0.1.8}
@@ -31,7 +31,7 @@ BuildRequires:	libfuse-devel
 BuildRequires:	libseccomp-devel
 BuildRequires:	libsoup-devel >= 2.4
 BuildRequires:	libxslt-progs
-BuildRequires:	ostree-devel >= 2017.6
+BuildRequires:	ostree-devel >= 2017.7
 BuildRequires:	pkgconfig >= 1:0.24
 BuildRequires:	polkit-devel >= 0.98
 BuildRequires:	rpmbuild(macros) >= 1.682
@@ -39,7 +39,7 @@ BuildRequires:	tar >= 1:1.22
 BuildRequires:	xorg-lib-libXau-devel
 BuildRequires:	xz
 %{?with_system_bwrap:Requires:	bubblewrap >= 0.1.8}
-Requires:	ostree >= 2017.6
+Requires:	ostree >= 2017.7
 Obsoletes:	xdg-app < 0.6.0
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -54,7 +54,7 @@ Summary:	Shared flatpak library
 Summary(pl.UTF-8):	Biblioteka współdzielona flatpak
 Group:		Libraries
 Requires:	glib2 >= 1:2.45.8
-Requires:	ostree >= 2017.6
+Requires:	ostree >= 2017.7
 
 %description libs
 Shared flatpak library.
@@ -68,7 +68,7 @@ Summary(pl.UTF-8):	Pliki nagłówkowe biblioteki flatpak
 Group:		Development/Libraries
 Requires:	%{name}-libs = %{version}-%{release}
 Requires:	glib2-devel >= 1:2.45.8
-Requires:	ostree-devel >= 2017.6
+Requires:	ostree-devel >= 2017.7
 
 %description devel
 Header files for flatpak library.
