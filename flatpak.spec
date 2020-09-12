@@ -1,19 +1,20 @@
 #
 # Conditional build:
 %bcond_without	static_libs	# static library
+%bcond_with	selinux		# selinux module for system-helper
 %bcond_without	system_bwrap	# system bubblewrap
 %bcond_without	malcontent	# parental control support via libmalcontent
 
 Summary:	Application deployment framework for desktop apps
 Summary(pl.UTF-8):	Szkielet do wdrażania aplikacji desktopowych
 Name:		flatpak
-Version:	1.7.2
+Version:	1.8.2
 Release:	1
 License:	LGPL v2+
 Group:		Applications
 #Source0Download: https://github.com/flatpak/flatpak/releases/
 Source0:	https://github.com/flatpak/flatpak/releases/download/%{version}/%{name}-%{version}.tar.xz
-# Source0-md5:	f8737742681e9a4c16d8baec4291244e
+# Source0-md5:	5de5d996f0698b8bdca3d1e8c61f761f
 URL:		https://flatpak.org/
 BuildRequires:	appstream-glib-devel >= 0.5.10
 %{?with_system_bwrap:BuildRequires:	bubblewrap >= 0.4.0}
@@ -43,12 +44,15 @@ BuildRequires:	pkgconfig >= 1:0.24
 BuildRequires:	polkit-devel >= 0.98
 BuildRequires:	rpmbuild(macros) >= 1.720
 BuildRequires:	sed >= 4.0
+# /usr/share/selinux/devel/Makefile
+%{?with_selinux:BuildRequires:	selinux-policy-devel}
 BuildRequires:	systemd-devel
 BuildRequires:	tar >= 1:1.22
 BuildRequires:	xdg-dbus-proxy >= 0.1.0
 BuildRequires:	xmlto
 BuildRequires:	xorg-lib-libXau-devel
 BuildRequires:	xz
+BuildRequires:	zstd-devel >= 0.8.1
 # no switch to disable
 %{!?with_malcontent:BuildConflicts:	libmalcontent-devel}
 Requires:	appstream-glib >= 0.5.10
@@ -75,6 +79,7 @@ Requires:	gpgme >= 1:1.1.8
 %{?with_malcontent:Requires:	libmalcontent >= 0.4.0}
 Requires:	libxml2 >= 2.4
 Requires:	ostree >= 2018.9
+Requires:	zstd >= 0.8.1
 
 %description libs
 Shared flatpak library.
@@ -170,6 +175,7 @@ Uzupełnianie parametrów polecenia flatpak w powłoce ZSH.
 %build
 %configure \
 	--disable-silent-rules \
+	%{?with_selinux:--enable-selinux-module} \
 	%{?with_static_libs:--enable-static} \
 	--with-html-dir=%{_gtkdocdir} \
 	%{?with_system_bwrap:--with-system-bubblewrap} \
@@ -225,6 +231,8 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) /usr/lib/systemd/user-environment-generators/60-flatpak
 # not supported by PLD gdm (yet?)
 #%{_datadir}/gdm/env.d/flatpak.env
+# what handles this?
+#/usr/lib/sysusers.d/flatpak.conf
 %dir %{_datadir}/flatpak
 %dir %{_datadir}/flatpak/triggers
 %attr(755,root,root) %{_datadir}/flatpak/triggers/*.trigger
