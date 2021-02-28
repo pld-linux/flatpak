@@ -117,9 +117,7 @@ Biblioteka statyczna flatpak.
 Summary:	API documentation for flatpak library
 Summary(pl.UTF-8):	Dokumentacja API biblioteki flatpak
 Group:		Documentation
-%if "%{_rpmversion}" >= "4.6"
 BuildArch:	noarch
-%endif
 
 %description apidocs
 API documentation for flatpak library.
