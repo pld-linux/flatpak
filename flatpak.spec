@@ -8,18 +8,18 @@
 Summary:	Application deployment framework for desktop apps
 Summary(pl.UTF-8):	Szkielet do wdrażania aplikacji desktopowych
 Name:		flatpak
-Version:	1.8.2
+Version:	1.10.2
 Release:	1
 License:	LGPL v2+
 Group:		Applications
 #Source0Download: https://github.com/flatpak/flatpak/releases/
 Source0:	https://github.com/flatpak/flatpak/releases/download/%{version}/%{name}-%{version}.tar.xz
-# Source0-md5:	5de5d996f0698b8bdca3d1e8c61f761f
+# Source0-md5:	61701ebaac700a2fe6eb33233bb7d493
 URL:		https://flatpak.org/
 BuildRequires:	appstream-glib-devel >= 0.5.10
 %{?with_system_bwrap:BuildRequires:	bubblewrap >= 0.4.0}
 BuildRequires:	dconf-devel >= 0.26
-BuildRequires:	docbook-dtd412-xml
+BuildRequires:	docbook-dtd45-xml
 BuildRequires:	docbook-style-xsl-nons
 # or libelf >= 0.8.12
 BuildRequires:	elfutils-devel
@@ -39,9 +39,10 @@ BuildRequires:	libseccomp-devel
 BuildRequires:	libsoup-devel >= 2.4
 BuildRequires:	libxml2-devel >= 2.4
 BuildRequires:	libxslt-progs
-BuildRequires:	ostree-devel >= 2018.9
+BuildRequires:	ostree-devel >= 2020.8
 BuildRequires:	pkgconfig >= 1:0.24
 BuildRequires:	polkit-devel >= 0.98
+BuildRequires:	rpm-build >= 4.6
 BuildRequires:	rpmbuild(macros) >= 1.720
 BuildRequires:	sed >= 4.0
 # /usr/share/selinux/devel/Makefile
@@ -57,7 +58,7 @@ BuildRequires:	zstd-devel >= 0.8.1
 %{!?with_malcontent:BuildConflicts:	libmalcontent-devel}
 Requires:	appstream-glib >= 0.5.10
 %{?with_system_bwrap:Requires:	bubblewrap >= 0.4.0}
-Requires:	ostree >= 2018.9
+Requires:	ostree >= 2020.8
 Requires:	polkit >= 0.98
 Requires:	xdg-dbus-proxy >= 0.1.0
 Obsoletes:	xdg-app < 0.6.0
@@ -78,7 +79,7 @@ Requires:	glib2 >= 1:2.60
 Requires:	gpgme >= 1:1.1.8
 %{?with_malcontent:Requires:	libmalcontent >= 0.4.0}
 Requires:	libxml2 >= 2.4
-Requires:	ostree >= 2018.9
+Requires:	ostree >= 2020.8
 Requires:	zstd >= 0.8.1
 
 %description libs
@@ -93,7 +94,7 @@ Summary(pl.UTF-8):	Pliki nagłówkowe biblioteki flatpak
 Group:		Development/Libraries
 Requires:	%{name}-libs = %{version}-%{release}
 Requires:	glib2-devel >= 1:2.60
-Requires:	ostree-devel >= 2018.9
+Requires:	ostree-devel >= 2020.8
 
 %description devel
 Header files for flatpak library.
@@ -132,6 +133,7 @@ Group:		Applications/Shells
 Requires:	%{name} = %{version}-%{release}
 Requires:	bash-completion >= 2
 Obsoletes:	bash-completion-xdg-app < 0.6.0
+BuildArch:	noarch
 
 %description -n bash-completion-flatpak
 Bash completion for flatpak command.
@@ -145,6 +147,7 @@ Summary(pl.UTF-8):	Dopełnianie składni poleceń flatpak w fish
 Group:		Applications/Shells
 Requires:	%{name} = %{version}-%{release}
 Requires:	fish
+BuildArch:	noarch
 
 %description -n fish-completion-flatpak
 Fish completion for flatpak commands.
@@ -158,6 +161,7 @@ Summary(pl.UTF-8):	Uzupełnianie parametrów polecenia flatpak w powłoce ZSH
 Group:		Applications/Shells
 Requires:	%{name} = %{version}-%{release}
 Requires:	zsh
+BuildArch:	noarch
 
 %description -n zsh-completion-flatpak
 ZSH completion for flatpak command.
@@ -226,9 +230,8 @@ rm -rf $RPM_BUILD_ROOT
 %{systemduserunitdir}/flatpak-oci-authenticator.service
 %{systemduserunitdir}/flatpak-portal.service
 %{systemduserunitdir}/flatpak-session-helper.service
+%attr(755,root,root) /usr/lib/systemd/system-environment-generators/60-flatpak-system-only
 %attr(755,root,root) /usr/lib/systemd/user-environment-generators/60-flatpak
-# not supported by PLD gdm (yet?)
-#%{_datadir}/gdm/env.d/flatpak.env
 # what handles this?
 #/usr/lib/sysusers.d/flatpak.conf
 %dir %{_datadir}/flatpak
@@ -274,6 +277,7 @@ rm -rf $RPM_BUILD_ROOT
 %files -n fish-completion-flatpak
 %defattr(644,root,root,755)
 %{fish_compdir}
+
 %files -n zsh-completion-flatpak
 %defattr(644,root,root,755)
 %{zsh_compdir}/_flatpak
