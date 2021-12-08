@@ -8,13 +8,13 @@
 Summary:	Application deployment framework for desktop apps
 Summary(pl.UTF-8):	Szkielet do wdrażania aplikacji desktopowych
 Name:		flatpak
-Version:	1.10.3
+Version:	1.10.5
 Release:	1
 License:	LGPL v2+
 Group:		Applications
 #Source0Download: https://github.com/flatpak/flatpak/releases/
 Source0:	https://github.com/flatpak/flatpak/releases/download/%{version}/%{name}-%{version}.tar.xz
-# Source0-md5:	d3567f5541830a85054af33695dfda69
+# Source0-md5:	aeff8d90a58ed50271cae6ac2aff7600
 URL:		https://flatpak.org/
 BuildRequires:	appstream-glib-devel >= 0.5.10
 %{?with_system_bwrap:BuildRequires:	bubblewrap >= 0.4.0}
