@@ -2,6 +2,7 @@
 # Conditional build:
 %bcond_without	apidocs		# API documentation
 %bcond_without	static_libs	# static library
+%bcond_with	libsoup		# libsoup instead of curl
 %bcond_with	selinux		# selinux module for system-helper
 %bcond_without	system_bwrap	# system bubblewrap
 %bcond_without	malcontent	# parental control support via libmalcontent
@@ -19,10 +20,10 @@ Source0:	https://github.com/flatpak/flatpak/releases/download/%{version}/%{name}
 Patch0:		%{name}-missing.patch
 URL:		https://flatpak.org/
 BuildRequires:	AppStream-devel >= 0.14.0
-BuildRequires:	appstream-glib-devel >= 0.5.10
 BuildRequires:	autoconf >= 2.63
 BuildRequires:	automake >= 1:1.13.4
-%{?with_system_bwrap:BuildRequires:	bubblewrap >= 0.4.0}
+%{?with_system_bwrap:BuildRequires:	bubblewrap >= 0.5.0}
+%{!?with_libsoup:BuildRequires:	curl-devel >= 7.29.0}
 BuildRequires:	dconf-devel >= 0.26
 %if %{with apidocs}
 BuildRequires:	docbook-dtd45-xml
@@ -40,10 +41,10 @@ BuildRequires:	intltool >= 0.35.0
 BuildRequires:	json-glib-devel >= 1.0
 BuildRequires:	libarchive-devel >= 2.8.0
 BuildRequires:	libcap-devel
-BuildRequires:	libfuse-devel >= 2.9.2
+BuildRequires:	libfuse3-devel >= 3.1.1
 %{?with_malcontent:BuildRequires:	libmalcontent-devel >= 0.4.0}
 BuildRequires:	libseccomp-devel
-BuildRequires:	libsoup-devel >= 2.4
+%{?with_libsoup:BuildRequires:	libsoup-devel >= 2.4}
 BuildRequires:	libtool >= 2:2.2.6
 BuildRequires:	libxml2-devel >= 2.4
 %{?with_apidocs:BuildRequires:	libxslt-progs}
@@ -64,8 +65,8 @@ BuildRequires:	xz
 BuildRequires:	zstd-devel >= 0.8.1
 # no switch to disable
 %{!?with_malcontent:BuildConflicts:	libmalcontent-devel}
-Requires:	appstream-glib >= 0.5.10
 %{?with_system_bwrap:Requires:	bubblewrap >= 0.4.0}
+Requires:	libfuse3 >= 3.1.1
 Requires:	ostree >= 2020.8
 Requires:	polkit >= 0.98
 Requires:	xdg-dbus-proxy >= 0.1.0
@@ -82,6 +83,7 @@ Szkielet do wdrażania aplikacji desktopowych.
 Summary:	Shared flatpak library
 Summary(pl.UTF-8):	Biblioteka współdzielona flatpak
 Group:		Libraries
+%{!?with_libsoup:Requires:	curl-libs >= 7.29.0}
 Requires:	dconf >= 0.26
 Requires:	glib2 >= 1:2.60
 Requires:	gpgme >= 1:1.1.8
