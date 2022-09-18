@@ -1,5 +1,6 @@
 #
 # Conditional build:
+%bcond_without	apidocs		# API documentation
 %bcond_without	static_libs	# static library
 %bcond_with	selinux		# selinux module for system-helper
 %bcond_without	system_bwrap	# system bubblewrap
@@ -15,13 +16,18 @@ Group:		Applications
 #Source0Download: https://github.com/flatpak/flatpak/releases/
 Source0:	https://github.com/flatpak/flatpak/releases/download/%{version}/%{name}-%{version}.tar.xz
 # Source0-md5:	5e67b00ea06a45289718307d03a704a5
+Patch0:		%{name}-missing.patch
 URL:		https://flatpak.org/
 BuildRequires:	AppStream-devel >= 0.14.0
 BuildRequires:	appstream-glib-devel >= 0.5.10
+BuildRequires:	autoconf >= 2.63
+BuildRequires:	automake >= 1:1.13.4
 %{?with_system_bwrap:BuildRequires:	bubblewrap >= 0.4.0}
 BuildRequires:	dconf-devel >= 0.26
+%if %{with apidocs}
 BuildRequires:	docbook-dtd45-xml
 BuildRequires:	docbook-style-xsl-nons
+%endif
 # or libelf >= 0.8.12
 BuildRequires:	elfutils-devel
 BuildRequires:	gdk-pixbuf2-devel >= 2.0
@@ -38,8 +44,9 @@ BuildRequires:	libfuse-devel >= 2.9.2
 %{?with_malcontent:BuildRequires:	libmalcontent-devel >= 0.4.0}
 BuildRequires:	libseccomp-devel
 BuildRequires:	libsoup-devel >= 2.4
+BuildRequires:	libtool >= 2:2.2.6
 BuildRequires:	libxml2-devel >= 2.4
-BuildRequires:	libxslt-progs
+%{?with_apidocs:BuildRequires:	libxslt-progs}
 BuildRequires:	ostree-devel >= 2020.8
 BuildRequires:	pkgconfig >= 1:0.24
 BuildRequires:	polkit-devel >= 0.98
@@ -172,11 +179,20 @@ Uzupełnianie parametrów polecenia flatpak w powłoce ZSH.
 
 %prep
 %setup -q
+%patch0 -p1
 
 %{__sed} -i -e '1s,/usr/bin/env python3,%{__python3},' scripts/flatpak-{bisect,coredumpctl}
 
 %build
+%{__gtkdocize}
+%{__libtoolize}
+%{__aclocal} -I m4 -I subprojects/libglnx
+%{__autoconf}
+%{__autoheader}
+%{__automake}
 %configure \
+	%{?with_apidocs:--enable-documentation} \
+	%{?with_apidocs:--enable-gtk-doc} \
 	--disable-silent-rules \
 	%{?with_selinux:--enable-selinux-module} \
 	%{?with_static_libs:--enable-static} \
@@ -205,7 +221,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -f %{name}.lang
 %defattr(644,root,root,755)
-%doc NEWS
+%doc NEWS README.md
 %doc %{_docdir}/flatpak
 %attr(755,root,root) %{_bindir}/flatpak
 %attr(755,root,root) %{_bindir}/flatpak-bisect
@@ -267,9 +283,11 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libflatpak.a
 %endif
 
+%if %{with apidocs}
 %files apidocs
 %defattr(644,root,root,755)
-#%{_gtkdocdir}/flatpak
+%{_gtkdocdir}/flatpak
+%endif
 
 %files -n bash-completion-flatpak
 %defattr(644,root,root,755)
@@ -278,6 +296,7 @@ rm -rf $RPM_BUILD_ROOT
 %files -n fish-completion-flatpak
 %defattr(644,root,root,755)
 %{fish_compdir}
+%{_datadir}/fish/vendor_conf.d/flatpak.fish
 
 %files -n zsh-completion-flatpak
 %defattr(644,root,root,755)
