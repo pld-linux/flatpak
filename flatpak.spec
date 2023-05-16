@@ -10,14 +10,13 @@
 Summary:	Application deployment framework for desktop apps
 Summary(pl.UTF-8):	Szkielet do wdrażania aplikacji desktopowych
 Name:		flatpak
-Version:	1.14.0
+Version:	1.14.4
 Release:	1
 License:	LGPL v2+
 Group:		Applications
 #Source0Download: https://github.com/flatpak/flatpak/releases/
 Source0:	https://github.com/flatpak/flatpak/releases/download/%{version}/%{name}-%{version}.tar.xz
-# Source0-md5:	5e67b00ea06a45289718307d03a704a5
-Patch0:		%{name}-missing.patch
+# Source0-md5:	de04545ae7d547fdb65db93601591531
 URL:		https://flatpak.org/
 BuildRequires:	AppStream-devel >= 0.14.0
 BuildRequires:	autoconf >= 2.63
@@ -35,7 +34,7 @@ BuildRequires:	gdk-pixbuf2-devel >= 2.0
 BuildRequires:	gettext-tools >= 0.18.2
 BuildRequires:	glib2-devel >= 1:2.60
 BuildRequires:	gobject-introspection-devel >= 1.40.0
-BuildRequires:	gpgme-devel >= 1:1.1.8
+BuildRequires:	gpgme-devel >= 1:1.8.0
 BuildRequires:	gtk-doc >= 1.20
 BuildRequires:	intltool >= 0.35.0
 BuildRequires:	json-glib-devel >= 1.0
@@ -65,7 +64,7 @@ BuildRequires:	xz
 BuildRequires:	zstd-devel >= 0.8.1
 # no switch to disable
 %{!?with_malcontent:BuildConflicts:	libmalcontent-devel}
-%{?with_system_bwrap:Requires:	bubblewrap >= 0.4.0}
+%{?with_system_bwrap:Requires:	bubblewrap >= 0.5.0}
 Requires:	libfuse3 >= 3.1.1
 Requires:	ostree >= 2020.8
 Requires:	polkit >= 0.98
@@ -86,7 +85,7 @@ Group:		Libraries
 %{!?with_libsoup:Requires:	curl-libs >= 7.29.0}
 Requires:	dconf >= 0.26
 Requires:	glib2 >= 1:2.60
-Requires:	gpgme >= 1:1.1.8
+Requires:	gpgme >= 1:1.8.0
 %{?with_malcontent:Requires:	libmalcontent >= 0.4.0}
 Requires:	libxml2 >= 2.4
 Requires:	ostree >= 2020.8
@@ -181,7 +180,6 @@ Uzupełnianie parametrów polecenia flatpak w powłoce ZSH.
 
 %prep
 %setup -q
-%patch0 -p1
 
 %{__sed} -i -e '1s,/usr/bin/env python3,%{__python3},' scripts/flatpak-{bisect,coredumpctl}
 
