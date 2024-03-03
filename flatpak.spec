@@ -10,15 +10,15 @@
 Summary:	Application deployment framework for desktop apps
 Summary(pl.UTF-8):	Szkielet do wdrażania aplikacji desktopowych
 Name:		flatpak
-Version:	1.14.4
+Version:	1.14.5
 Release:	1
 License:	LGPL v2+
 Group:		Applications
 #Source0Download: https://github.com/flatpak/flatpak/releases/
 Source0:	https://github.com/flatpak/flatpak/releases/download/%{version}/%{name}-%{version}.tar.xz
-# Source0-md5:	de04545ae7d547fdb65db93601591531
+# Source0-md5:	1c3b34b8711037d9e4d4db4cbd8913be
 URL:		https://flatpak.org/
-BuildRequires:	AppStream-devel >= 0.14.0
+BuildRequires:	AppStream-devel >= 1.0
 BuildRequires:	autoconf >= 2.63
 BuildRequires:	automake >= 1:1.13.4
 %{?with_system_bwrap:BuildRequires:	bubblewrap >= 0.5.0}
@@ -247,10 +247,11 @@ rm -rf $RPM_BUILD_ROOT
 %{systemduserunitdir}/flatpak-oci-authenticator.service
 %{systemduserunitdir}/flatpak-portal.service
 %{systemduserunitdir}/flatpak-session-helper.service
-%attr(755,root,root) /usr/lib/systemd/system-environment-generators/60-flatpak-system-only
-%attr(755,root,root) /usr/lib/systemd/user-environment-generators/60-flatpak
+%attr(755,root,root) %{_prefix}%{systemdunitdir}-environment-generators/60-flatpak-system-only
+%attr(755,root,root) %{systemduserunitdir}-environment-generators/60-flatpak
 # what handles this?
-#/usr/lib/sysusers.d/flatpak.conf
+%{_prefix}/lib/sysusers.d/flatpak.conf
+%{systemdtmpfilesdir}/flatpak.conf
 %dir %{_datadir}/flatpak
 %dir %{_datadir}/flatpak/triggers
 %attr(755,root,root) %{_datadir}/flatpak/triggers/*.trigger
@@ -260,6 +261,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man5/flatpak-installation.5*
 %{_mandir}/man5/flatpak-metadata.5*
 %{_mandir}/man5/flatpak-remote.5*
+
 
 %files libs
 %defattr(644,root,root,755)
