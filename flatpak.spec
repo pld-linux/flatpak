@@ -21,6 +21,7 @@ URL:		https://flatpak.org/
 BuildRequires:	AppStream-devel >= 1.0
 BuildRequires:	autoconf >= 2.63
 BuildRequires:	automake >= 1:1.13.4
+BuildRequires:	bison
 %{?with_system_bwrap:BuildRequires:	bubblewrap >= 0.5.0}
 %{!?with_libsoup:BuildRequires:	curl-devel >= 7.29.0}
 BuildRequires:	dconf-devel >= 0.26
