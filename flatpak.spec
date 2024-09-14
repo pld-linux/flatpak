@@ -25,10 +25,8 @@ BuildRequires:	bison
 %{?with_system_bwrap:BuildRequires:	bubblewrap >= 0.10.0}
 %{!?with_libsoup:BuildRequires:	curl-devel >= 7.29.0}
 BuildRequires:	dconf-devel >= 0.26
-%if %{with apidocs}
 BuildRequires:	docbook-dtd45-xml
 BuildRequires:	docbook-style-xsl-nons
-%endif
 # or libelf >= 0.8.12
 BuildRequires:	elfutils-devel
 BuildRequires:	gdk-pixbuf2-devel >= 2.0
@@ -47,7 +45,7 @@ BuildRequires:	libseccomp-devel
 %{?with_libsoup:BuildRequires:	libsoup-devel >= 2.4}
 BuildRequires:	libtool >= 2:2.2.6
 BuildRequires:	libxml2-devel >= 2.4
-%{?with_apidocs:BuildRequires:	libxslt-progs}
+BuildRequires:	libxslt-progs
 BuildRequires:	ostree-devel >= 2020.8
 BuildRequires:	pkgconfig >= 1:0.24
 BuildRequires:	polkit-devel >= 0.98
@@ -192,7 +190,7 @@ Uzupełnianie parametrów polecenia flatpak w powłoce ZSH.
 %{__autoheader}
 %{__automake}
 %configure \
-	%{?with_apidocs:--enable-documentation} \
+	--enable-documentation \
 	%{?with_apidocs:--enable-gtk-doc} \
 	--disable-silent-rules \
 	%{?with_selinux:--enable-selinux-module} \
