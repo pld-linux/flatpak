@@ -210,6 +210,8 @@ rm -rf $RPM_BUILD_ROOT
 # obsoleted by pkg-config
 %{__rm} $RPM_BUILD_ROOT%{_libdir}/libflatpak.la
 
+%{!?with_apidocs:%{__rm} -r $RPM_BUILD_ROOT%{_gtkdocdir}/flatpak}
+
 %find_lang %{name}
 
 %clean
