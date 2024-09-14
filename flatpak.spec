@@ -10,19 +10,19 @@
 Summary:	Application deployment framework for desktop apps
 Summary(pl.UTF-8):	Szkielet do wdrażania aplikacji desktopowych
 Name:		flatpak
-Version:	1.14.6
+Version:	1.14.10
 Release:	1
 License:	LGPL v2+
 Group:		Applications
 #Source0Download: https://github.com/flatpak/flatpak/releases/
 Source0:	https://github.com/flatpak/flatpak/releases/download/%{version}/%{name}-%{version}.tar.xz
-# Source0-md5:	9ac68b1521067c400b3be401e533d20e
+# Source0-md5:	4eb3f96ab7a73b01b408e5bb15630106
 URL:		https://flatpak.org/
 BuildRequires:	AppStream-devel >= 1.0
 BuildRequires:	autoconf >= 2.63
 BuildRequires:	automake >= 1:1.13.4
 BuildRequires:	bison
-%{?with_system_bwrap:BuildRequires:	bubblewrap >= 0.5.0}
+%{?with_system_bwrap:BuildRequires:	bubblewrap >= 0.10.0}
 %{!?with_libsoup:BuildRequires:	curl-devel >= 7.29.0}
 BuildRequires:	dconf-devel >= 0.26
 %if %{with apidocs}
@@ -65,7 +65,7 @@ BuildRequires:	xz
 BuildRequires:	zstd-devel >= 0.8.1
 # no switch to disable
 %{!?with_malcontent:BuildConflicts:	libmalcontent-devel}
-%{?with_system_bwrap:Requires:	bubblewrap >= 0.5.0}
+%{?with_system_bwrap:Requires:	bubblewrap >= 0.10.0}
 Requires:	libfuse3 >= 3.1.1
 Requires:	ostree >= 2020.8
 Requires:	polkit >= 0.98
