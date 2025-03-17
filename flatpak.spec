@@ -10,17 +10,15 @@
 Summary:	Application deployment framework for desktop apps
 Summary(pl.UTF-8):	Szkielet do wdrażania aplikacji desktopowych
 Name:		flatpak
-Version:	1.14.10
+Version:	1.16.0
 Release:	1
 License:	LGPL v2+
 Group:		Applications
 #Source0Download: https://github.com/flatpak/flatpak/releases/
 Source0:	https://github.com/flatpak/flatpak/releases/download/%{version}/%{name}-%{version}.tar.xz
-# Source0-md5:	4eb3f96ab7a73b01b408e5bb15630106
+# Source0-md5:	bdf866646fb312a341f84669f625488b
 URL:		https://flatpak.org/
 BuildRequires:	AppStream-devel >= 1.0
-BuildRequires:	autoconf >= 2.63
-BuildRequires:	automake >= 1:1.13.4
 BuildRequires:	bison
 %{?with_system_bwrap:BuildRequires:	bubblewrap >= 0.10.0}
 %{!?with_libsoup:BuildRequires:	curl-devel >= 7.29.0}
@@ -35,27 +33,31 @@ BuildRequires:	glib2-devel >= 1:2.60
 BuildRequires:	gobject-introspection-devel >= 1.40.0
 BuildRequires:	gpgme-devel >= 1:1.8.0
 BuildRequires:	gtk-doc >= 1.20
-BuildRequires:	intltool >= 0.35.0
 BuildRequires:	json-glib-devel >= 1.0
 BuildRequires:	libarchive-devel >= 2.8.0
 BuildRequires:	libcap-devel
 BuildRequires:	libfuse3-devel >= 3.1.1
-%{?with_malcontent:BuildRequires:	libmalcontent-devel >= 0.4.0}
+%{?with_malcontent:BuildRequires:	libmalcontent-devel >= 0.5.0}
 BuildRequires:	libseccomp-devel
 %{?with_libsoup:BuildRequires:	libsoup-devel >= 2.4}
-BuildRequires:	libtool >= 2:2.2.6
 BuildRequires:	libxml2-devel >= 2.4
 BuildRequires:	libxslt-progs
+BuildRequires:	meson >= 0.53.0
+BuildRequires:	ninja >= 1.5
 BuildRequires:	ostree-devel >= 2020.8
 BuildRequires:	pkgconfig >= 1:0.24
 BuildRequires:	polkit-devel >= 0.98
+BuildRequires:	python3 >= 1:3
+BuildRequires:	python3-pyparsing
 BuildRequires:	rpm-build >= 4.6
-BuildRequires:	rpmbuild(macros) >= 1.720
+BuildRequires:	rpmbuild(macros) >= 2.042
 BuildRequires:	sed >= 4.0
 # /usr/share/selinux/devel/Makefile
 %{?with_selinux:BuildRequires:	selinux-policy-devel}
 BuildRequires:	systemd-devel
 BuildRequires:	tar >= 1:1.22
+BuildRequires:	wayland-devel >= 1.15
+BuildRequires:	wayland-protocols >= 1.32
 BuildRequires:	xdg-dbus-proxy >= 0.1.0
 BuildRequires:	xmlto
 BuildRequires:	xorg-lib-libXau-devel
@@ -85,7 +87,7 @@ Group:		Libraries
 Requires:	dconf >= 0.26
 Requires:	glib2 >= 1:2.60
 Requires:	gpgme >= 1:1.8.0
-%{?with_malcontent:Requires:	libmalcontent >= 0.4.0}
+%{?with_malcontent:Requires:	libmalcontent >= 0.5.0}
 Requires:	libxml2 >= 2.4
 Requires:	ostree >= 2020.8
 Requires:	zstd >= 0.8.1
@@ -183,34 +185,32 @@ Uzupełnianie parametrów polecenia flatpak w powłoce ZSH.
 %{__sed} -i -e '1s,/usr/bin/env python3,%{__python3},' scripts/flatpak-{bisect,coredumpctl}
 
 %build
-%{__gtkdocize}
-%{__libtoolize}
-%{__aclocal} -I m4 -I subprojects/libglnx
-%{__autoconf}
-%{__autoheader}
-%{__automake}
-%configure \
-	--enable-documentation \
-	%{?with_apidocs:--enable-gtk-doc} \
-	--disable-silent-rules \
-	%{?with_selinux:--enable-selinux-module} \
-	%{?with_static_libs:--enable-static} \
-	--with-html-dir=%{_gtkdocdir} \
-	%{?with_system_bwrap:--with-system-bubblewrap} \
-	--with-system-dbus-proxy \
-	--with-systemdsystemunitdir=%{systemdunitdir}
-%{__make}
+%meson \
+	%{!?with_static_libs:--default-library=shared} \
+	-Ddconf=enabled \
+	-Ddbus_config_dir=%{_datadir}/dbus-1/system.d \
+	-Ddocbook_docs=enabled \
+	-Dgir=enabled \
+	-Dgtkdoc=%{__enabled_disabled apidocs} \
+	-Dlibzstd=enabled \
+	-Dmalcontent=enabled \
+	-Dman=enabled \
+	-Dseccomp=enabled \
+	-Dselinux_module=%{__enabled_disabled selinux} \
+	%{?with_system_bwrap:-Dsystem_bubblewrap=/usr/bin/bwrap} \
+	-Dsystem_dbus_proxy=/usr/bin/xdg-dbus-proxy \
+	-Dsystem_helper=enabled \
+	-Dsystemd=enabled \
+	-Dsystemdsystemunitdir=%{systemdunitdir} \
+	-Dtests=false \
+	-Dwayland_security_context=enabled
+
+%meson_build
 
 %install
 rm -rf $RPM_BUILD_ROOT
 
-%{__make} install \
-	DESTDIR=$RPM_BUILD_ROOT
-
-# obsoleted by pkg-config
-%{__rm} $RPM_BUILD_ROOT%{_libdir}/libflatpak.la
-
-%{!?with_apidocs:%{__rm} -r $RPM_BUILD_ROOT%{_gtkdocdir}/flatpak}
+%meson_install
 
 %find_lang %{name}
 
@@ -222,7 +222,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -f %{name}.lang
 %defattr(644,root,root,755)
-%doc NEWS README.md
+%doc NEWS README.md SECURITY.md
 %doc %{_docdir}/flatpak
 %attr(755,root,root) %{_bindir}/flatpak
 %attr(755,root,root) %{_bindir}/flatpak-bisect
@@ -236,10 +236,11 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libexecdir}/flatpak-system-helper
 %attr(755,root,root) %{_libexecdir}/flatpak-validate-icon
 %attr(755,root,root) %{_libexecdir}/revokefs-fuse
+%attr(755,root,root) /etc/profile.d/flatpak.csh
 %attr(755,root,root) /etc/profile.d/flatpak.sh
-/etc/dbus-1/system.d/org.freedesktop.Flatpak.SystemHelper.conf
 %{_datadir}/dbus-1/services/org.freedesktop.Flatpak.service
 %{_datadir}/dbus-1/system-services/org.freedesktop.Flatpak.SystemHelper.service
+%{_datadir}/dbus-1/system.d/org.freedesktop.Flatpak.SystemHelper.conf
 %{_datadir}/dbus-1/services/org.flatpak.Authenticator.Oci.service
 %{_datadir}/dbus-1/services/org.freedesktop.portal.Flatpak.service
 %{_datadir}/polkit-1/actions/org.freedesktop.Flatpak.policy
@@ -261,6 +262,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man5/flatpak-installation.5*
 %{_mandir}/man5/flatpak-metadata.5*
 %{_mandir}/man5/flatpak-remote.5*
+%{_mandir}/man5/flatpakref.5*
+%{_mandir}/man5/flatpakrepo.5*
 
 %files libs
 %defattr(644,root,root,755)
