@@ -67,6 +67,7 @@ BuildRequires:	zstd-devel >= 0.8.1
 %{!?with_malcontent:BuildConflicts:	libmalcontent-devel}
 %{?with_system_bwrap:Requires:	bubblewrap >= 0.10.0}
 Requires:	libfuse3 >= 3.1.1
+Requires:	libfuse3-tools >= 3.1.1
 Requires:	ostree >= 2020.8
 Requires:	polkit >= 0.98
 Requires:	xdg-dbus-proxy >= 0.1.0
@@ -199,6 +200,7 @@ Uzupełnianie parametrów polecenia flatpak w powłoce ZSH.
 	-Dselinux_module=%{__enabled_disabled selinux} \
 	%{?with_system_bwrap:-Dsystem_bubblewrap=/usr/bin/bwrap} \
 	-Dsystem_dbus_proxy=/usr/bin/xdg-dbus-proxy \
+	-Dsystem_fusermount=/usr/bin/fusermount3 \
 	-Dsystem_helper=enabled \
 	-Dsystemd=enabled \
 	-Dsystemdsystemunitdir=%{systemdunitdir} \
