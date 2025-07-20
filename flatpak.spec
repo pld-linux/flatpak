@@ -10,13 +10,13 @@
 Summary:	Application deployment framework for desktop apps
 Summary(pl.UTF-8):	Szkielet do wdrażania aplikacji desktopowych
 Name:		flatpak
-Version:	1.16.0
-Release:	2
+Version:	1.16.1
+Release:	1
 License:	LGPL v2+
 Group:		Applications
 #Source0Download: https://github.com/flatpak/flatpak/releases/
 Source0:	https://github.com/flatpak/flatpak/releases/download/%{version}/%{name}-%{version}.tar.xz
-# Source0-md5:	bdf866646fb312a341f84669f625488b
+# Source0-md5:	d1c142279ee460f6a196fa67fb9874de
 URL:		https://flatpak.org/
 BuildRequires:	AppStream-devel >= 1.0
 BuildRequires:	bison
