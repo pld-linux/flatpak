@@ -10,13 +10,13 @@
 Summary:	Application deployment framework for desktop apps
 Summary(pl.UTF-8):	Szkielet do wdrażania aplikacji desktopowych
 Name:		flatpak
-Version:	1.16.3
+Version:	1.18.2
 Release:	1
 License:	LGPL v2+
 Group:		Applications
 #Source0Download: https://github.com/flatpak/flatpak/releases/
 Source0:	https://github.com/flatpak/flatpak/releases/download/%{version}/%{name}-%{version}.tar.xz
-# Source0-md5:	ef282086e84aa8c349ed609fdf77c9db
+# Source0-md5:	d8ee5bf9c44e91548578707c913e7aed
 URL:		https://flatpak.org/
 BuildRequires:	AppStream-devel >= 1.0
 BuildRequires:	bison
@@ -142,7 +142,7 @@ Summary:	Bash completion for flatpak command
 Summary(pl.UTF-8):	Bashowe uzupełnianie parametrów polecenia flatpak
 Group:		Applications/Shells
 Requires:	%{name} = %{version}-%{release}
-Requires:	bash-completion >= 2
+Requires:	bash-completion >= 1:2
 Obsoletes:	bash-completion-xdg-app < 0.6.0
 BuildArch:	noarch
 
@@ -269,8 +269,8 @@ rm -rf $RPM_BUILD_ROOT
 
 %files libs
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libflatpak.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libflatpak.so.0
+%{_libdir}/libflatpak.so.*.*.*
+%ghost %{_libdir}/libflatpak.so.0
 %{_libdir}/girepository-1.0/Flatpak-1.0.typelib
 %{_datadir}/dbus-1/interfaces/org.freedesktop.Flatpak.xml
 %{_datadir}/dbus-1/interfaces/org.freedesktop.Flatpak.Authenticator.xml
@@ -278,7 +278,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files devel
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libflatpak.so
+%{_libdir}/libflatpak.so
 %{_includedir}/flatpak
 %{_datadir}/gir-1.0/Flatpak-1.0.gir
 %{_pkgconfigdir}/flatpak.pc
