@@ -66,10 +66,11 @@ BuildRequires:	zstd-devel >= 0.8.1
 # no switch to disable
 %{!?with_malcontent:BuildConflicts:	libmalcontent-devel}
 %{?with_system_bwrap:Requires:	bubblewrap >= 0.10.0}
-Requires:	libfuse3 >= 3.1.1
+Requires:	libfuse3%{?_isa} >= 3.1.1
 Requires:	libfuse3-tools >= 3.1.1
-Requires:	ostree >= 2020.8
+Requires:	ostree%{?_isa} >= 2020.8
 Requires:	polkit >= 0.98
+Requires:	polkit-libs%{?_isa} >= 0.98
 Requires:	xdg-dbus-proxy >= 0.1.0
 Obsoletes:	xdg-app < 0.6.0
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -84,14 +85,14 @@ Szkielet do wdrażania aplikacji desktopowych.
 Summary:	Shared flatpak library
 Summary(pl.UTF-8):	Biblioteka współdzielona flatpak
 Group:		Libraries
-%{!?with_libsoup:Requires:	curl-libs >= 7.29.0}
-Requires:	dconf >= 0.26
-Requires:	glib2 >= 1:2.60
-Requires:	gpgme >= 1:1.8.0
-%{?with_malcontent:Requires:	libmalcontent >= 0.5.0}
-Requires:	libxml2 >= 2.4
-Requires:	ostree >= 2020.8
-Requires:	zstd >= 0.8.1
+%{!?with_libsoup:Requires:	curl-libs%{?_isa} >= 7.29.0}
+Requires:	dconf%{?_isa} >= 0.26
+Requires:	glib2%{?_isa} >= 1:2.60
+Requires:	gpgme%{?_isa} >= 1:1.8.0
+%{?with_malcontent:Requires:	libmalcontent%{?_isa} >= 0.5.0}
+Requires:	libxml2%{?_isa} >= 2.4
+Requires:	ostree%{?_isa} >= 2020.8
+Requires:	zstd%{?_isa} >= 0.8.1
 
 %description libs
 Shared flatpak library.
@@ -103,9 +104,9 @@ Biblioteka współdzielona flatpak.
 Summary:	Header files for flatpak library
 Summary(pl.UTF-8):	Pliki nagłówkowe biblioteki flatpak
 Group:		Development/Libraries
-Requires:	%{name}-libs = %{version}-%{release}
-Requires:	glib2-devel >= 1:2.60
-Requires:	ostree-devel >= 2020.8
+Requires:	%{name}-libs%{?_isa} = %{version}-%{release}
+Requires:	glib2-devel%{?_isa} >= 1:2.60
+Requires:	ostree-devel%{?_isa} >= 2020.8
 
 %description devel
 Header files for flatpak library.
@@ -117,7 +118,7 @@ Pliki nagłówkowe biblioteki flatpak.
 Summary:	Static flatpak library
 Summary(pl.UTF-8):	Biblioteka statyczna flatpak
 Group:		Development/Libraries
-Requires:	%{name}-devel = %{version}-%{release}
+Requires:	%{name}-devel%{?_isa} = %{version}-%{release}
 
 %description static
 Static flatpak library.
